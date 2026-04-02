@@ -45,15 +45,15 @@ void screen_print_char_colored(char c, int state, int underline) {
         screen_print("\x1b[4m");
     }
     if (state == 1) {
-        screen_print("\x1b[32m");
+        screen_print("\x1b[32m");        /* green  – correct      */
     } else if (state == -1) {
-        screen_print("\x1b[31m");
+        screen_print("\x1b[31m");        /* red    – wrong        */
     } else if (state == -2) {
-        screen_print("\x1b[91m");
+        screen_print("\x1b[91m");        /* bright red – overflow */
     } else if (state == 2) {
-        screen_print("\x1b[38;5;141m");
+        screen_print("\x1b[38;5;141m");  /* purple – current word */
     } else {
-        screen_print("\x1b[90m");
+        screen_print("\x1b[90m");        /* dim    – untyped      */
     }
     char buf[2] = {c, '\0'};
     screen_print(buf);
