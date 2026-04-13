@@ -1,4 +1,6 @@
 #include "mystring.h"
+#include "memory.h"
+#include <stdlib.h>
 
 int my_strlen(const char *s) {
     int len = 0;
@@ -8,53 +10,50 @@ int my_strlen(const char *s) {
 
 int my_strcmp(const char *a, const char *b) {
     int i = 0;
+
     while (a[i] != '\0' && b[i] != '\0') {
         if (a[i] != b[i]) return a[i] - b[i];
         i++;
     }
+
     return a[i] - b[i];
 }
 
-void my_strcpy(char *dest, const char *src) {
-    int i = 0;
-    while (src[i] != '\0') {
-        dest[i] = src[i];
-        i++;
+char *generate_sentence(int num_words) {
+    const char *words[] = {
+        "the", "quick", "brown", "fox", "jumps",
+        "over", "lazy", "dog", "hello", "world",
+        "type", "fast", "code", "test", "run",
+        "program", "keyboard", "screen", "memory", "data",
+        "input", "output", "error", "debug", "compile"
+    };
+    int word_count = sizeof(words) / sizeof(words[0]);
+
+    /* calculate total length needed */
+    int total_len = 0;
+    int chosen[20];
+    for (int i = 0; i < num_words && i < 20; i++) {
+        chosen[i] = rand() % word_count;
+        total_len += my_strlen(words[chosen[i]]);
     }
-    dest[i] = '\0';
-}
+    total_len += num_words - 1; /* spaces between words */
+    total_len += 1;             /* null terminator */
 
-int my_itoa(int n, char *buf) {
-    int i = 0;
-    if (n == 0) { buf[i++] = '0'; buf[i] = '\0'; return i; }
-    if (n < 0)  { buf[i++] = '-'; n = -n; }
-    /* Find digits in reverse order */
-    char tmp[12];
-    int  tlen = 0;
-    while (n > 0) { tmp[tlen++] = '0' + (n % 10); n /= 10; }
-    /* Reverse into buf */
-    for (int j = tlen - 1; j >= 0; j--) buf[i++] = tmp[j];
-    buf[i] = '\0';
-    return i;
-}
+    char *sentence = (char *)my_alloc(total_len);
+    if (!sentence) return "";
 
-const char *my_strchr(const char *s, char c) {
-    while (*s != '\0') {
-        if (*s == c) return s;
-        s++;
-    }
-    return 0;
-}
-
-int my_tokenize(char *src, char delim, char **tokens, int max_tokens) {
-    int count = 0;
-    tokens[count++] = src;
-    while (*src != '\0' && count < max_tokens) {
-        if (*src == delim) {
-            *src = '\0';
-            tokens[count++] = src + 1;
+    int pos = 0;
+    for (int i = 0; i < num_words && i < 20; i++) {
+        if (i > 0) {
+            sentence[pos++] = ' ';
         }
-        src++;
+        const char *w = words[chosen[i]];
+        int wlen = my_strlen(w);
+        for (int j = 0; j < wlen; j++) {
+            sentence[pos++] = w[j];
+        }
     }
-    return count;
+    sentence[pos] = '\0';
+
+    return sentence;
 }
