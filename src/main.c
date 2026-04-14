@@ -5,14 +5,13 @@
 #include "memory.h"
 
 #include <stdlib.h>
-#include <time.h>
 
 
 
 int main() {
     char input[200];
 
-    srand(time(NULL));
+    srand(1);
 
     char *sentence = generate_sentence(5);
 
