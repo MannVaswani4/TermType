@@ -1,18 +1,29 @@
 #include "keyboard.h"
-#include <stdio.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
-int keyboard_readline(char *buf, int len) {
-    int i = 0;
+static struct termios orig_termios;
+
+void keyboard_enable_raw(void) {
+    ioctl(STDIN_FILENO, TIOCGETA, &orig_termios);
+    
+    struct termios raw = orig_termios;
+    raw.c_lflag &= ~(ECHO | ICANON);
+    raw.c_cc[VMIN] = 0;
+    raw.c_cc[VTIME] = 0;
+    
+    ioctl(STDIN_FILENO, TIOCSETA, &raw);
+}
+
+void keyboard_disable_raw(void) {
+    ioctl(STDIN_FILENO, TIOCSETA, &orig_termios);
+}
+
+int keyboard_keypressed(void) {
     char c;
-
-    while (i < len - 1) {
-        c = getchar();
-
-        if (c == EOF || c == '\n') break;
-
-        buf[i++] = c;
+    if (read(STDIN_FILENO, &c, 1) == 1) {
+        return c;
     }
-
-    buf[i] = '\0';
-    return i;
+    return -1;
 }
