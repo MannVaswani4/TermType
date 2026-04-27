@@ -57,6 +57,3 @@ The project is structured into strict, separated architectural domains:
 - `src/string.c` / `include/mystring.h`: Low-level character manipulation and word-bank sentence generation.
 - `src/math.c` / `include/math.h`: Custom arithmetic logic.
 
-## 📜 License
-
-This project is open-sourced under the MIT License.
