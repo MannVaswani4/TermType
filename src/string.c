@@ -1,5 +1,6 @@
 #include "mystring.h"
 #include "memory.h"
+#include "words.h"
 #include <stdlib.h>
 
 int my_strlen(const char *s) {
@@ -20,21 +21,15 @@ int my_strcmp(const char *a, const char *b) {
 }
 
 char *generate_sentence(int num_words) {
-    const char *words[] = {
-        "the", "quick", "brown", "fox", "jumps",
-        "over", "lazy", "dog", "hello", "world",
-        "type", "fast", "code", "test", "run",
-        "program", "keyboard", "screen", "memory", "data",
-        "input", "output", "error", "debug", "compile"
-    };
-    int word_count = sizeof(words) / sizeof(words[0]);
+    /* First pass: pick words and compute total length */
+    int *chosen = (int *)my_alloc(sizeof(int) * num_words);
+    if (!chosen) return "";
 
-    /* calculate total length needed */
     int total_len = 0;
-    int chosen[20];
-    for (int i = 0; i < num_words && i < 20; i++) {
-        chosen[i] = rand() % word_count;
-        total_len += my_strlen(words[chosen[i]]);
+    int i;
+    for (i = 0; i < num_words; i++) {
+        chosen[i] = rand() % common_words_count;
+        total_len += my_strlen(common_words[chosen[i]]);
     }
     total_len += num_words - 1; /* spaces between words */
     total_len += 1;             /* null terminator */
@@ -43,13 +38,14 @@ char *generate_sentence(int num_words) {
     if (!sentence) return "";
 
     int pos = 0;
-    for (int i = 0; i < num_words && i < 20; i++) {
+    for (i = 0; i < num_words; i++) {
         if (i > 0) {
             sentence[pos++] = ' ';
         }
-        const char *w = words[chosen[i]];
+        const char *w = common_words[chosen[i]];
         int wlen = my_strlen(w);
-        for (int j = 0; j < wlen; j++) {
+        int j;
+        for (j = 0; j < wlen; j++) {
             sentence[pos++] = w[j];
         }
     }

@@ -1,7 +1,7 @@
 #include "memory.h"
 
 /* Simulated virtual RAM */
-#define POOL_SIZE 65536
+#define POOL_SIZE 1048576
 
 static char pool[POOL_SIZE];
 static int offset = 0;

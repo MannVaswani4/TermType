@@ -2,8 +2,28 @@
 #include "mystring.h"
 #include <unistd.h>
 
+/* ── Frame buffer ── */
+#define FRAME_BUF_SIZE 65536
+static char  fb[FRAME_BUF_SIZE];
+static int   fb_len = 0;
+
+void screen_flush(void) {
+    if (fb_len > 0) {
+        write(STDOUT_FILENO, fb, fb_len);
+        fb_len = 0;
+    }
+}
+
 void screen_print(const char *s) {
-    write(STDOUT_FILENO, s, my_strlen(s));
+    int n = my_strlen(s);
+    /* If it won't fit, flush first */
+    if (fb_len + n >= FRAME_BUF_SIZE) {
+        write(STDOUT_FILENO, fb, fb_len);
+        fb_len = 0;
+    }
+    /* Copy into frame buffer */
+    int i;
+    for (i = 0; i < n; i++) fb[fb_len++] = s[i];
 }
 
 void screen_println(const char *s) {
