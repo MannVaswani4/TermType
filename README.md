@@ -19,7 +19,16 @@ TermType is a terminal-based typing test written entirely in C, built from the g
 
 ---
 
-## Build
+## Installation
+
+### Using Homebrew (macOS)
+
+```bash
+brew tap shiven16/termtype
+brew install termtype
+```
+
+### Building from source
 
 ```bash
 git clone https://github.com/MannVaswani4/TermType.git
@@ -33,9 +42,9 @@ gcc src/*.c -I include/ -o termtype
 ## Usage
 
 ```bash
-./termtype          # default: 50 words
-./termtype 25       # 25 words
-./termtype 100      # 100 words
+termtype          # default: 50 words
+termtype 25       # 25 words
+termtype 100      # 100 words
 ```
 
 The argument must be an integer between 1 and 1000.
