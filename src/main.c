@@ -48,7 +48,9 @@ int main(int argc, char *argv[]) {
     screen_print("\033[?25l"); /* hide cursor */
 
     while (1) {
-        my_reset();
+        /* Capture pool offset before any allocation this round.
+           my_dealloc(sentence_start) at end of round resets it back (LIFO). */
+        char *sentence_start = (char *)my_alloc(0); /* zero-size probe = current offset */
 
         char *sentence = generate_sentence(num_words);
         int len = my_strlen(sentence);
@@ -355,7 +357,7 @@ int main(int argc, char *argv[]) {
         screen_println("\x1b[54G\x1b[90m\u2502\x1b[0m");
         screen_print("\x1b[2K"); screen_print("\x1b[90m  \u2502\x1b[0m    \x1b[33mAccuracy:\x1b[0m      "); screen_print_int(accuracy); screen_print("%");
         screen_println("\x1b[54G\x1b[90m\u2502\x1b[0m");
-        screen_print("\x1b[2K"); screen_print("\x1b[90m  \u2502\x1b[0m    \x1b[34mKeystrokes:\x1b[0m    ");
+        screen_print("\x1b[2K"); screen_print("\x1b[90m  \u2502\x1b[0m    \x1b[34mCorrect Keypresses:\x1b[0m ");
         screen_print_int(correct_keystrokes); screen_print(" / "); screen_print_int(total_keystrokes);
         screen_println("\x1b[54G\x1b[90m\u2502\x1b[0m");
 
@@ -392,6 +394,11 @@ int main(int argc, char *argv[]) {
         keyboard_disable_raw();
 
         if (choice == 'q' || choice == 3 || choice == 27) break;
+
+        /* Free all allocations from this round — resets bump offset back to
+           sentence_start (LIFO); safe because sentence/state/overflows are
+           not accessed after this point. */
+        my_dealloc(sentence_start);
     }
 
     screen_clear();

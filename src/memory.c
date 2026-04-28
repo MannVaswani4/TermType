@@ -20,7 +20,10 @@ void *my_alloc(int size) {
     return ptr;
 }
 
-/* Reset entire pool */
-void my_reset(void) {
-    offset = 0;
+/* Deallocate by resetting offset back to ptr (LIFO bump dealloc) */
+void my_dealloc(void *ptr) {
+    char *p = (char *)ptr;
+    if (p >= pool && p <= pool + POOL_SIZE) {
+        offset = (int)(p - pool);
+    }
 }

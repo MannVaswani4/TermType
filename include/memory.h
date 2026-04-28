@@ -4,7 +4,8 @@
 /* Allocate 'size' bytes from a fixed memory pool */
 void *my_alloc(int size);
 
-/* Reset entire memory pool (useful between runs if needed) */
-void my_reset(void);
+
+/* Bump-dealloc: resets pool offset back to ptr (LIFO only) */
+void my_dealloc(void *ptr);
 
 #endif

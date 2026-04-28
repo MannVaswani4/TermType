@@ -2,13 +2,13 @@
 
 TermType is a terminal-based typing test written entirely in C, built from the ground up without relying on the standard C library. There is no `<string.h>`, no `<math.h>`, and no `malloc()` or `free()`. Every subsystem — memory allocation, string handling, arithmetic, screen output, and keyboard input — is implemented from scratch using only low-level POSIX system calls.
 
-![TermType screenshot](./utils/Screenshot%202026-04-28%20at%205.56.56%20AM.png)
+![TermType screenshot](./utils/screenshot.png)
 
 ---
 
 ## Features
 
-- WPM, Accuracy, Keystroke tracking, Worst Keys analysis
+- WPM, Accuracy, Correct Keypresses, Worst Keys analysis
 - Custom word count via CLI argument
 - Zero standard libraries — every utility is hand-rolled:
   - `memory.c` — Static 1 MB memory pool with a bump allocator; no `malloc`
